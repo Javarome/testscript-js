@@ -16,7 +16,7 @@
     "prebuild": "npm install",
     "prepublishOnly": "npm test",
     "test": "node src/test/testAll.js",
-    "test-one": "node src/test/ToBeTest.js"
+    "test-one": "node src/test/ToBeDefinedTest.js"
   },
   "dependencies": {
     "glob-promise": "~6.0.5"

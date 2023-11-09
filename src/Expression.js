@@ -53,7 +53,7 @@ export class Expression {
    * @param {any} value
    */
   check(comparison, expected, value = this.#value) {
-    const result = this.negated ? !comparison : comparison
+    const result = this.#negated ? !comparison : comparison
     if (!result) {
       const valueStr = this.valueStr(value)
       const expectedStr = this.valueStr(expected)
