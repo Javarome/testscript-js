@@ -14,7 +14,7 @@
   },
   "scripts": {
     "prebuild": "npm install",
-    "prepublishOnly": "npm run build && npm test",
+    "prepublishOnly": "npm test",
     "test": "node src/test/testAll.js",
     "test-one": "node src/test/ToBeTest.js"
   },
