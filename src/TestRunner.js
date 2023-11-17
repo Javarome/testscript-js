@@ -36,7 +36,12 @@ export class TestRunner {
   /**
    * @member {string}
    */
-  #globPattern
+  #includePattern
+
+  /**
+   * @member {string}
+   */
+  #excludePattern
 
   /**
    * @member {Logger}
@@ -50,16 +55,19 @@ export class TestRunner {
 
   /**
    *
-   * @param {string} globPattern
+   * @param {string} includePattern
+   * @param {string} excludePattern
    * @param {Logger} logger
    * @param {Intl.NumberFormat} numberFormat
    */
   constructor(
-    globPattern = "**/*Test.js",
+    includePattern = "**/*Test.js",
+    excludePattern = "node_modules/**/*.*",
     logger = new DefaultLogger("testscript"),
     numberFormat = new Intl.NumberFormat(undefined, {maximumFractionDigits: 2})
   ) {
-    this.#globPattern = globPattern
+    this.#includePattern = includePattern
+    this.#excludePattern = excludePattern
     this.logger = logger
     this.#numberFormat = numberFormat
   }
@@ -69,7 +77,7 @@ export class TestRunner {
    */
   async run() {
     const runStart = performance.now()
-    const files = await glob(this.#globPattern, {ignore: "node_modules/**/*.*"})
+    const files = await glob(this.#includePattern, {ignore: this.#excludePattern})
     const suites = []
     let success = true
     for (const filePath of files) {

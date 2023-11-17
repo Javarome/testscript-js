@@ -56,10 +56,11 @@ And an error will output as:
 
 Of course this is typically what you want to run for your `test` npm script.
 
-By default it will look for all `*.test.ts` files in all subdirs, but you can specifiy a different file pattern, like:
+By default, it will look for all `*.test.ts` files in all subdirs except `node_modules`, 
+but you can specifiy a different file pattern, like:
 
 ```
-testscript **/*.spec.js
+testscript **/*.spec.js 
 ````
 
 ## Debugging
