@@ -1,8 +1,10 @@
-import { TestRunner } from '../TestRunner.js';
-import { TestError } from '../TestError.js';
-import { AnsiColor } from '../AnsiColor.js';
+#!/usr/bin/env node
 
-const runner = new TestRunner();
+import * as process from 'process';
+import { AnsiColor, TestError, TestRunner } from '../src/index.js'
+
+const testFilesPattern = process.argv[2] || process.env.TESTSCRIPT_FILES || '**/*.test.js';
+const runner = new TestRunner(testFilesPattern);
 runner.run().then(result => {
   const successCount = runner.successCount(result);
   const total = result.suites.length;

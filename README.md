@@ -1,21 +1,21 @@
 # testscript-js
 
-I am fed up of the difficulty to run JavaScript tests in this messy world of Node + common JS + ESM. I just want to run JavaScript tests of my JavaScript code, period.
-(see [testcript](https://www.npmjs.com/package/@javarome/testscript) for TypeScript version)
+Fed up of the difficulty to run tests in this messy world of Node + common JS + ESM + Babel + Jest + JavaScript (or [TypeScript](https://www.npmjs.com/package/@javarome/testscript))?
+You just want to run your tests of your code, period? The alternative here is as follows:
 
 The alternative here is as follows:
 
-- Run all JS stuff using `node`.
-- *A test is a JS executable*: you don't need a test runner to run a single test file, but just to execute:
+- Run all JavaScript stuff using `node`.
+- *A test is an executable*: you don't need a test runner to run a single test file. Instead, just execute the test file:
   ```
-  node src/MyTest.js
+  node src/My.test.js
   ````
-  will throw an Error if the test doesn't pass (this will work with a tsx alternative as well but tsx makes it even easier).
+  Thanks to the `assert()` predicates, this will throw a `TestError` if the test doesn't pass.
 - Keep syntax as similar as possible to the syntax used by [Jest](https://jestjs.io) (`describe()`, `test()`, `expect()`, `beforeEach()`...) , which is the most popular framework to test JS/TS.
 
 ```js
 // MyTest.js
-import { describe, expect, test } from '@javarome/testscript';
+import { describe, expect, test } from '@javarome/testscript-js';
 
 describe("Some software item", () => {
 
@@ -27,29 +27,11 @@ describe("Some software item", () => {
 })
 ```
 
-- The only remaining thing you need is a [`TestRunner`](https://github.com/Javarome/testscript/blob/main/src/TestRunner.ts) to execute a bunch of tests given a file pattern.
-  Using it, it's pretty easy to write your [main test program](https://github.com/Javarome/testscript/blob/main/src/test/testAll.ts) like below:
+- The only remaining thing you need is a [`TestRunner`](https://github.com/Javarome/testscript/blob/main/src/TestRunner.ts) to locate tests and execute them at once.
+  One can be run using this command:
 
-```js
-// testAll.ts
-import { TestRunner, TestError } from '@javarome/testscript';
-
-const runner = new TestRunner(); // Look for *Test.ts files by default
-runner.run().then(result => {
-  const total = result.suites.length;
-  const totalTime = `(${runner.durationStr(result.duration)})`;
-  const success = runner.allSucceeded(result);
-  if (success) {
-    runner.logger.log(`All ${total} test suietes succeeded`, totalTime);
-  } else {
-    const successCount = runner.successCount(result);
-    const errorSummary = !success ? ', ' + `${total - successCount} failed` : '';
-    runner.logger.log(`${successCount}/${total} test suites succeeded` + errorSummary, totalTime);
-  }
-  if (!success) {
-    throw new TestError('Tests run failed');
-  }
-});
+```
+testscript
 ````
 
 You can then run it as a casual script:
@@ -72,17 +54,28 @@ And an error will output as:
 
 ![Test runner failure output](docs/TestRunner-fail.png)
 
+Of course this is typically what you want to run for your `test` npm script.
+
+By default it will look for all `*.test.ts` files in all subdirs, but you can specifiy a different file pattern, like:
+
+```
+testscript **/*.spec.js
+````
+
 ## Debugging
 
-You can debug the test runner by running a Node script in debugging mode from your IDE.
-Should you want to debug a single test, just debug a script running only this one:
+Once you have your test scripts ready in your `package.json`, like below:
 
 ````json
 {
   "scripts": {
+    "test": "testscript-js",
     "test-one": "node src/test/MyTest.js"
   }
 }
 ````
 
-Also note that the TestRunner uses a `DefaultLogger` instance as a `Logger`, which can be specified as a second argument.
+All you need to need all or one test is to set your breakpoints in your tests 
+and run those scripts in debug mode.
+
+Also note that the `TestRunner` uses a `DefaultLogger` instance as a `Logger`, which can be specified as its second constructor argument.

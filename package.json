@@ -2,7 +2,7 @@
   "name": "@javarome/testscript-js",
   "type": "module",
   "author": "Jérôme Beau (javarome@gmail.com)",
-  "version": "0.7.1",
+  "version": "0.8.5",
   "description": "Simple, straightfoward JavaScript test solution",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -15,8 +15,11 @@
   "scripts": {
     "prebuild": "npm install",
     "prepublishOnly": "npm test",
-    "test": "node src/test/testAll.js",
-    "test-one": "node src/test/ToBeDefinedTest.js"
+    "test": "npx .",
+    "test-one": "node src/test/ToBeDefined.test.js"
+  },
+  "bin": {
+    "testscript": "bin/index.js"
   },
   "dependencies": {
     "glob-promise": "~6.0.5"
