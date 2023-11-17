@@ -2,10 +2,10 @@
   "name": "@javarome/testscript-js",
   "type": "module",
   "author": "Jérôme Beau (javarome@gmail.com)",
-  "version": "0.10.2",
+  "version": "0.10.4",
   "description": "Simple, straightfoward JavaScript test solution",
-  "exports": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "exports": "./index.js",
+  "types": "./index.d.ts",
   "license": "MIT",
   "homepage": "https://github.com/Javarome/testscript-js#readme",
   "repository": {
@@ -14,15 +14,20 @@
   },
   "scripts": {
     "prebuild": "npm install",
-    "prepublishOnly": "npm test",
+    "build": "tsc",
     "test": "npx .",
-    "test-one": "node src/test/ToBeDefined.test.js"
+    "test-one": "node src/test/ToBeDefined.test.js",
+    "prepublishOnly": "npm test",
+    "publish": "rm -Rf dist && npm run build && cp -R src/* dist && cp -R bin dist && cp package*.* dist && npm publish dist"
   },
   "bin": {
     "testscript-js": "bin/index.js"
   },
   "dependencies": {
     "glob-promise": "~6.0.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
   },
   "keywords": [
     "test",

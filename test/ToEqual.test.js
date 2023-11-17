@@ -1,5 +1,4 @@
-import { describe } from '../TestSuite.js';
-import { expect } from '../Expression.js';
+import { describe, expect } from '../src/index.js'
 
 describe('expect(toBeTested).toEqual(expected)', () => {
   expect({}).toEqual({})

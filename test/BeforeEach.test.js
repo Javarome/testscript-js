@@ -1,5 +1,4 @@
-import { beforeEach, describe, test } from '../TestSuite.js';
-import { expect } from '../Expression.js';
+import { beforeEach, describe, expect, test } from '../src/index.js'
 
 describe('beforeEach(() => {})', () => {
   let fixture;

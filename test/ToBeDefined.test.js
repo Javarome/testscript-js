@@ -1,5 +1,4 @@
-import { expect } from '../Expression.js';
-import { describe } from '../TestSuite.js';
+import { describe, expect } from '../src/index.js'
 
 describe('expect(toBeTested).toBeDefined()', () => {
   expect(undefined).not.toBeDefined()

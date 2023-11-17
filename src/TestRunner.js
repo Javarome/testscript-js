@@ -123,13 +123,7 @@ export class TestRunner {
       status = AnsiColor.str('FAIL', AnsiColor.fgRed)
       let stack = error.stack
       if (stack) {
-        let filePattern = file.replaceAll('/', '\/')
-        const errorRegExp = new RegExp(`.*(Error: (.+)\\n)[\\s\\S]*?${filePattern}:\\d+:\\d+\\)\n([\\s\\S]*)`,
-          'gm')
-        let items = errorRegExp.exec(stack)
-        if (items && items.length > 0) {
-          details = AnsiColor.str(items[2] + '\n' + items[3], AnsiColor.fgRed)
-        }
+        details = AnsiColor.str(stack, AnsiColor.fgRed)
       }
     } else {
       status = AnsiColor.str('PASS', AnsiColor.fgGreen)
