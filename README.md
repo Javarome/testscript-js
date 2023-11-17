@@ -31,7 +31,7 @@ describe("Some software item", () => {
   One can be run using this command:
 
 ```
-testscript
+testscript-js
 ````
 
 You can then run it as a casual script:
@@ -56,12 +56,16 @@ And an error will output as:
 
 Of course this is typically what you want to run for your `test` npm script.
 
-By default, it will look for all `*.test.ts` files in all subdirs except `node_modules`, 
+By default, it will look for all `*.test.ts` files in all subdirs, 
 but you can specifiy a different file pattern, like:
 
 ```
-testscript **/*.spec.js 
+testscript-js **/*.spec.js 
 ````
+By default `node_modules` are ignored. You can also customize those excluded paths by specifying a second argument, which can be an array of paths:
+```
+testscript-js **/*.test.js '{out/**,node_modules/**/*.*}'
+```
 
 ## Debugging
 
@@ -79,4 +83,4 @@ Once you have your test scripts ready in your `package.json`, like below:
 All you need to need all or one test is to set your breakpoints in your tests 
 and run those scripts in debug mode.
 
-Also note that the `TestRunner` uses a `DefaultLogger` instance as a `Logger`, which can be specified as its second constructor argument.
+Also note that the `TestRunner` uses a `DefaultLogger` instance as a `Logger`, which can be specified as its third constructor argument.
