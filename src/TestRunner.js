@@ -1,7 +1,7 @@
-import { promise as glob } from 'glob-promise'
 import path from 'path'
 import { DefaultLogger, Logger } from './log/index.js'
 import { AnsiColor } from './AnsiColor.js'
+import { globSync } from 'glob'
 
 export class TestRunnerResult {
   /**
@@ -36,12 +36,12 @@ export class TestRunner {
   /**
    * @member {string}
    */
-  #includePattern
+  #include
 
   /**
-   * @member {string}
+   * @member {string[]}
    */
-  #excludePattern
+  #exclude
 
   /**
    * @member {Logger}
@@ -53,32 +53,24 @@ export class TestRunner {
    */
   #numberFormat
 
-  static toArray (pattern) {
-    pattern = pattern.trim()
-    if (pattern.startsWith('{') && pattern.endsWith('}')) {
-      let files = pattern.substring(1, pattern.length - 1)
-      return files.split(',')
-    }
-    return [pattern]
-  }
-
   /**
-   *
-   * @param {string} includePattern
-   * @param {string} excludePattern
+   * @constructor
+   * @param {string[]} include
+   * @param {string[]} exclude
    * @param {Logger} logger
    * @param {Intl.NumberFormat} numberFormat
    */
   constructor (
-    includePattern = '**/*Test.js',
-    excludePattern = 'node_modules/**/*.*',
+    include = ['**/*.test.js'],
+    exclude = ['node_modules/**/*.*'],
     logger = new DefaultLogger('testscript'),
     numberFormat = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 })
   ) {
-    this.#includePattern = includePattern
-    this.#excludePattern = TestRunner.toArray(excludePattern)
+    this.#include = include
+    this.#exclude = exclude
     this.logger = logger
     this.#numberFormat = numberFormat
+    logger.debug('include=', this.#include, 'exclude=', this.#exclude);
   }
 
   /**
@@ -86,7 +78,8 @@ export class TestRunner {
    */
   async run () {
     const runStart = performance.now()
-    const files = await glob(this.#includePattern, { ignore: this.#excludePattern })
+    const files = globSync(this.#include, { ignore: this.#exclude })
+    this.logger.debug('files', files);
     const suites = []
     let success = true
     for (const filePath of files) {
