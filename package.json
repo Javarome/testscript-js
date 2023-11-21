@@ -2,7 +2,7 @@
   "name": "@javarome/testscript-js",
   "type": "module",
   "author": "Jérôme Beau (javarome@gmail.com)",
-  "version": "0.10.6",
+  "version": "0.10.7",
   "description": "Simple, straightfoward JavaScript test solution",
   "exports": "./index.js",
   "types": "./index.d.ts",

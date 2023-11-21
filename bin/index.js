@@ -2,10 +2,12 @@
 
 import * as process from 'process'
 import { AnsiColor, TestError, TestRunner } from '../src/index.js'
+import { CLI } from '../src/cli/CLI.js'
 
-const includePattern = process.argv[2] || process.env.TESTSCRIPT_INCLUDE || '**/*.test.js'
-const excludePattern = process.argv[3] || process.env.TESTSCRIPT_EXCLUDE || 'node_modules/**/*.*'
-const runner = new TestRunner(includePattern, excludePattern)
+const args = new CLI().getArgs();
+const include = args.include || process.env.TESTSCRIPT_INCLUDE?.split(",") || ['**/*.test.js']
+const exclude = args.exclude || process.env.TESTSCRIPT_EXCLUDE?.split(",") || ['node_modules/**/*.*']
+const runner = new TestRunner(include, exclude)
 runner.run().then(result => {
   const successCount = runner.successCount(result)
   const total = result.suites.length

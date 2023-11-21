@@ -3,7 +3,9 @@ import {Logger} from "./Logger.js"
 const NOP = () => {
 }
 
-const defaultLogLevels = ["info", "warn", "error"]
+const env = process.env.LOGLEVEL || process.env.LOG_LEVEL;
+const argLevels = env ? env.split(',') : undefined
+const defaultLogLevels = argLevels || ["info", "warn", "error"]
 
 export class LogConsole {
   /**
