@@ -1,5 +1,6 @@
 import {TestError} from "./TestError.js"
 import {AnsiColor} from "./AnsiColor.js"
+import assert from 'node:assert'
 
 export class Expression {
   /**
@@ -48,11 +49,22 @@ export class Expression {
 
   /**
    *
-   * @param {boolean} comparison
+   * @param {function} cb
    * @param {any} expected
    * @param {any} value
    */
-  check(comparison, expected, value = this.#value) {
+  check(cb, expected, value = this.#value) {
+    let comparison
+    try {
+      cb(value, expected)
+      comparison = true
+    } catch (e) {
+      if (e.name === 'AssertionError') {
+        comparison = false
+      } else {
+        throw e
+      }
+    }
     const result = this.#negated ? !comparison : comparison
     if (!result) {
       const valueStr = this.valueStr(value)
@@ -67,28 +79,26 @@ export class Expression {
    * @param {any} expected
    */
   toBe(expected) {
-    this.check(this.#value === expected, expected)
+    this.check(assert.strictEqual, expected)
   }
 
   toBeUndefined() {
-    this.check(this.#value === void 0, "undefined")
+    this.check(assert.strictEqual, void 0)
   }
 
   toBeDefined() {
-    this.check(this.#value !== void 0, "defined")
+    this.check(assert.notStrictEqual, void 0)
   }
 
   toBeNull() {
-    return this.#value === null
+    this.check(assert.strictEqual, null)
   }
 
   /**
    * @param {any} expected
    */
   toEqual(expected) {
-    let expectedExpr = JSON.stringify(expected)
-    let valueExp = JSON.stringify(this.#value)
-    this.check(valueExp === expectedExpr, expected, this.#value)
+    this.check(assert.deepStrictEqual, expected)
   }
 
   /**

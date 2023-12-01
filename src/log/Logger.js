@@ -4,8 +4,23 @@ export class Logger {
    */
   name;
 
+  /**
+   * @abstract
+   */
   log;
+
+  /**
+   * @abstract
+   */
   debug;
+
+  /**
+   * @abstract
+   */
   warn;
+
+  /**
+   * @abstract
+   */
   error;
 }
