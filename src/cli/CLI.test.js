@@ -1,6 +1,6 @@
 import { CLI } from './CLI.js';
 import { describe, test } from '../TestSuite.js';
-import { expect } from '../Expression.js';
+import { expect } from '../expect/index.js'
 
 /**
  * Testing files spec.

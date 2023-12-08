@@ -1,13 +1,9 @@
-import {TestError} from "./TestError.js"
-import {AnsiColor} from "./AnsiColor.js"
+import { TestError } from '../TestError.js'
+import { AnsiColor } from '../AnsiColor.js'
 import assert from 'node:assert'
+import { Expression } from './Expression.js'
 
-export class Expression {
-  /**
-   * @member {boolean}
-   */
-  #negated = false
-
+export class ValueExpression extends Expression {
   /**
    * @member {any}
    */
@@ -17,12 +13,8 @@ export class Expression {
    * @param {any} value
    */
   constructor(value) {
+    super()
     this.#value = value
-  }
-
-  get not() {
-    this.#negated = true
-    return this
   }
 
   /**
@@ -31,7 +23,7 @@ export class Expression {
    * @param {string} expectedStr
    * @return {string}
    */
-  ansiDiff(valueStr, expectedStr) {
+  #ansiDiff(valueStr, expectedStr) {
     let diffStr = ""
     let color = AnsiColor.bgGreen
     let colorStart = 0
@@ -53,7 +45,7 @@ export class Expression {
    * @param {any} expected
    * @param {any} value
    */
-  check(cb, expected, value = this.#value) {
+  #check(cb, expected, value = this.#value) {
     let comparison
     try {
       cb(value, expected)
@@ -65,12 +57,12 @@ export class Expression {
         throw e
       }
     }
-    const result = this.#negated ? !comparison : comparison
+    const result = this.isNegated ? !comparison : comparison
     if (!result) {
-      const valueStr = this.valueStr(value)
-      const expectedStr = this.valueStr(expected)
+      const valueStr = this.#valueStr(value)
+      const expectedStr = this.#valueStr(expected)
       throw new TestError(
-        `Got ${this.ansiDiff(valueStr, expectedStr)} ${AnsiColor.str(`instead of ${(this.negated ? "not " : "") +
+        `Got ${this.#ansiDiff(valueStr, expectedStr)} ${AnsiColor.str(`instead of ${(this.negated ? "not " : "") +
         expectedStr}`, AnsiColor.fgRed)}`)
     }
   }
@@ -79,33 +71,33 @@ export class Expression {
    * @param {any} expected
    */
   toBe(expected) {
-    this.check(assert.strictEqual, expected)
+    this.#check(assert.strictEqual, expected)
   }
 
   toBeUndefined() {
-    this.check(assert.strictEqual, void 0)
+    this.#check(assert.strictEqual, void 0)
   }
 
   toBeDefined() {
-    this.check(assert.notStrictEqual, void 0)
+    this.#check(assert.notStrictEqual, void 0)
   }
 
   toBeNull() {
-    this.check(assert.strictEqual, null)
+    this.#check(assert.strictEqual, null)
   }
 
   /**
    * @param {any} expected
    */
   toEqual(expected) {
-    this.check(assert.deepStrictEqual, expected)
+    this.#check(assert.deepStrictEqual, expected)
   }
 
   /**
    * @param {any} value
    * @return {string|"undefined"}
    */
-  valueStr(value) {
+  #valueStr(value) {
     let type = typeof value
     switch (type) {
       case "undefined":
@@ -120,10 +112,3 @@ export class Expression {
   }
 }
 
-/**
- * @param {any} result
- * @return {Expression}
- */
-export function expect(result) {
-  return new Expression(result)
-}
