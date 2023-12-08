@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import * as process from 'process'
-import { AnsiColor, TestError, TestRunner } from '../index.js'
-import { CLI } from '../cli/CLI.js'
+import { AnsiColor, TestError, TestRunner } from '../src/index.js'
+import { CLI } from '../src/cli/CLI.js'
 
 const args = new CLI().getArgs();
 const include = args.include || process.env.TESTSCRIPT_INCLUDE?.split(",") || ['**/*.test.js']

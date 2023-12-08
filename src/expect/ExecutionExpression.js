@@ -7,7 +7,7 @@ export class ExecutionExpression extends Expression {
    */
   #function
 
-  get not() {
+  get not () {
     super.not
     return this
   }
@@ -24,24 +24,38 @@ export class ExecutionExpression extends Expression {
    * @param {Error | string} expected error instance or error message
    */
   toThrow (expected) {
-    try {
-      this.#function()
-      if (!this.isNegated) {
-        throw new TestError('Expected to throw ' + expected)
-      }
-    } catch (thrown) {
-      if (thrown instanceof TestError) {
-        throw thrown
-      } else {
-        const expectedType = expected.constructor.name
-        const isString = expectedType === 'String'
-        const matchType = isString ? true : thrown.constructor.name === expectedType
-        const checkType = matchType || (this.isNegated && !matchType)
-        const matchMessage = thrown.message === (isString ? expected : expected.message)
-        const checkMessage = matchMessage || (this.isNegated && !matchMessage)
-        if (!checkType || !checkMessage) {
-          throw new TestError('Expected not to throw ' + expected)
+    let isAsync = this.#function.constructor.name === 'AsyncFunction'
+    if (isAsync) {
+      this.#function().then(result => {
+        if (!this.isNegated) {
+          throw new TestError('Expected to throw ' + expected)
         }
+      }).catch(thrown => {
+        this.handleThrown(thrown, expected)
+      })
+    } else
+      try {
+        this.#function()
+        if (!this.isNegated) {
+          throw new TestError('Expected to throw ' + expected)
+        }
+      } catch (thrown) {
+        this.handleThrown(thrown, expected)
+      }
+  }
+
+  handleThrown (thrown, expected) {
+    if (thrown instanceof TestError) {
+      throw thrown
+    } else {
+      const expectedType = expected ? expected.constructor.name : 'Error'
+      const isString = expectedType === 'String'
+      const matchType = !expected || isString ? true : thrown.constructor.name === expectedType
+      const checkType = matchType || (this.isNegated && !matchType)
+      const matchMessage = !expected || thrown.message === (isString ? expected : expected.message)
+      const checkMessage = matchMessage || (this.isNegated && !matchMessage)
+      if (!checkType || !checkMessage) {
+        throw new TestError('Expected not to throw ' + expected)
       }
     }
   }
