@@ -1,6 +1,16 @@
 import { Expression } from './Expression.js'
 import { TestError } from '../TestError.js'
 
+/**
+ * @callback cb
+ * @return any
+ */
+
+/**
+ * @callback asyncCb
+ * @return Promise<any>
+ */
+
 export class ExecutionExpression extends Expression {
   /**
    * @member {any}
@@ -13,7 +23,7 @@ export class ExecutionExpression extends Expression {
   }
 
   /**
-   * @param {any} func
+   * @param {cb | asyncCb} func
    */
   constructor (func) {
     super()

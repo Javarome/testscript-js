@@ -2,7 +2,7 @@
   "name": "@javarome/testscript-js",
   "type": "module",
   "author": "Jérôme Beau (javarome@gmail.com)",
-  "version": "0.10.9",
+  "version": "0.11.2",
   "description": "Simple, straightfoward JavaScript test solution",
   "exports": "./index.js",
   "types": "./index.d.ts",
@@ -14,7 +14,7 @@
   },
   "scripts": {
     "prebuild": "npm install",
-    "build": "tsc",
+    "build": "rm -Rf dist && cp -R src dist && tsc",
     "test": "npx .",
     "test-one": "node src/test/ToBeDefined.test.js",
     "prepublishOnly": "npm test",
