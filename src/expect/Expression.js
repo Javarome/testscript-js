@@ -1,5 +1,3 @@
-import { AnsiColor } from '../AnsiColor.js'
-
 /**
  * @abstract
  */

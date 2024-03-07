@@ -1,5 +1,9 @@
 # testscript-js
 
+*Since the advent of [NodeJS test API](https://nodejs.org/api/test.html), I recommend using it instead of this package.*
+
+---
+
 Fed up of the difficulty to run tests in this messy world of Node + common JS + ESM + Babel + Jest + JavaScript (or [TypeScript](https://www.npmjs.com/package/@javarome/testscript))?
 You just want to run your tests of your code, period? The alternative here is as follows:
 

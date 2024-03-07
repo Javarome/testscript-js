@@ -47,11 +47,13 @@ export class ValueExpression extends Expression {
    */
   #check(cb, expected, value = this.#value) {
     let comparison
+    let errMessage
     try {
       cb(value, expected)
       comparison = true
     } catch (e) {
       if (e.name === 'AssertionError') {
+        errMessage = e.message
         comparison = false
       } else {
         throw e
@@ -61,9 +63,7 @@ export class ValueExpression extends Expression {
     if (!result) {
       const valueStr = this.#valueStr(value)
       const expectedStr = this.#valueStr(expected)
-      throw new TestError(
-        `Got ${this.#ansiDiff(valueStr, expectedStr)} ${AnsiColor.str(`instead of ${(this.negated ? "not " : "") +
-        expectedStr}`, AnsiColor.fgRed)}`)
+      throw new TestError(errMessage || `Got ${this.#ansiDiff(valueStr, expectedStr)} ${AnsiColor.str(`instead of ${(this.negated ? 'not ' : '') + expectedStr}`, AnsiColor.fgRed)}`)
     }
   }
 
